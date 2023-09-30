@@ -22,3 +22,33 @@
   <%= link_to 'Delete', movie_path(@movie), 'data-method': 'delete', 'data-confirm': 'Are you sure?', class: 'btn btn-danger col-2' %>
   <%= link_to 'Back to movie list', movies_path, class: 'btn btn-primary col-2' %>
 </div>
+
+<h1> New Review for <%= @movie.title %> </h1>
+
+<%= form_tag movie_reviews_path(@movie), class: 'form' do %>
+
+  <div class="form-group">
+  <%= label_tag 'review[potatoes]', 'How many potatoes:', class: 'col-form-label' %>
+  <%= select_tag 'review[potatoes]', options_for_select(1..5), class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <p>Write your comment</p>
+    <%= text_area :review, :comments, class: 'form-control'%>
+  </div>
+  
+  <%= submit_tag 'Create Review', :class => 'btn btn-success' %>
+
+<% end %>
+
+<h2>Reviews</h2>
+
+<% @reviews.each do |review| %>
+  <div class="review">
+
+    <p>Rating: <%= review.potatoes %></p>
+    <p>Comment: <%= review.comments %></p>
+    <p>By: <%= review.moviegoer.email %></p>
+
+  </div>
+<% end %>

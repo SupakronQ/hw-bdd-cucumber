@@ -7,6 +7,9 @@ class MoviesController < ApplicationController
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
+
+    @reviews = @movie.reviews
+    
   end
 
   def index
@@ -56,6 +59,7 @@ class MoviesController < ApplicationController
     @movie_name = params[:movie][:title]
     find_movie = Tmdb::Movie.find(@movie_name)
     if !find_movie.empty?
+      
       movie = find_movie[0]
       @release_date = movie.release_date
       @name = movie.title 
