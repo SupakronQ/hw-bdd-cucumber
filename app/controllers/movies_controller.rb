@@ -1,3 +1,5 @@
+Tmdb::Api.key(ENV["APITMDB"])
+
 class MoviesController < ApplicationController
   before_action :force_index_redirect, only: [:index]
 
@@ -18,7 +20,11 @@ class MoviesController < ApplicationController
   end
 
   def new
-    # default: render 'new' template
+
+    @movie_title = params[:name]
+    @movie_date = params[:date] || Date.today.strftime()
+
+
   end
 
   def create
@@ -47,13 +53,18 @@ class MoviesController < ApplicationController
 
   def search_tmdb
 
-    if params[:movie][:title] == "Inception" 
-      flash[:notice] = "'#{params[:movie][:title]}' was in TMDb."
-    
+    @movie_name = params[:movie][:title]
+    find_movie = Tmdb::Movie.find(@movie_name)
+    if !find_movie.empty?
+      movie = find_movie[0]
+      @release_date = movie.release_date
+      @name = movie.title 
+      redirect_to new_movie_path( name:@name,date:@release_date )
     else
-      flash[:notice] = "'#{params[:movie][:title]}' was not found in TMDb."
+      flash[:notice] = "Movie '#{@movie_name}' not found."
+      redirect_to movies_path
     end
-    redirect_to root_path
+
   end
 
   private
