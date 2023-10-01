@@ -1,29 +1,46 @@
 <!--  app/views/movies/show.html.erb -->
-<h2>Details about <em><%= @movie.title %></em></h2>
 
-<ul id="details">
-  <li>
-    Rating:
-    <%= @movie.rating %>
-  </li>
-  <li>
-    Released on:
-    <%= @movie.release_date.strftime("%B %d, %Y") %>
-  </li>
-</ul>
 
-<h3>Description:</h3>
-<p id="description">
-  <%= @movie.description %>
-</p>
+<div class="details-container">
 
+  <div class="movie-image">
+    <%= image_tag @movie.url, alt: @movie.title, width: '250', height: '375' %>
+  </div>
+
+  <ul id="details">
+
+    <li>
+    <h2>Details about <em><%= @movie.title %></em></h2>
+    </li>
+
+    <li>
+      Rating:
+      <%= @movie.rating %>
+    </li>
+
+    <li>
+      Released on:
+      <%= @movie.release_date.strftime("%B %d, %Y") %>
+    </li>
+
+    <li>
+    <h3>Description:</h3>  
+    <%= @movie.description %>
+    </li>
+
+  </ul>
+</div>
+
+<br/>
 <div class="row">
   <%= link_to 'Edit', edit_movie_path(@movie), class: 'btn btn-primary col-2' %>
   <%= link_to 'Delete', movie_path(@movie), 'data-method': 'delete', 'data-confirm': 'Are you sure?', class: 'btn btn-danger col-2' %>
   <%= link_to 'Back to movie list', movies_path, class: 'btn btn-primary col-2' %>
 </div>
 
-<h1> New Review for <%= @movie.title %> </h1>
+<br/>
+
+<h3> New Review for <%= @movie.title %> </h3>
 
 <%= form_tag movie_reviews_path(@movie), class: 'form' do %>
 
@@ -41,6 +58,8 @@
 
 <% end %>
 
+<br/>
+
 <h2>Reviews</h2>
 
 <% @reviews.each do |review| %>
@@ -49,6 +68,15 @@
     <p>Rating: <%= review.potatoes %></p>
     <p>Comment: <%= review.comments %></p>
     <p>By: <%= review.moviegoer.email %></p>
+    <%= image_tag(review.moviegoer.avatar_url) %>
+
+    <% if current_moviegoer.email == review.moviegoer.email %>
+    <%= link_to 'Delete', movie_review_path(@movie, review), 'data-method': 'delete', 'data-confirm': 'Are you sure?', class: 'btn btn-danger col-2' %>
+    <% end %>
 
   </div>
 <% end %>
+
+</div>
+
+

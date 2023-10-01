@@ -26,7 +26,8 @@ class MoviesController < ApplicationController
 
     @movie_title = params[:name]
     @movie_date = params[:date] || Date.today.strftime()
-
+    @movie_url = params[:url]
+    @movie_description = params[:description]
 
   end
 
@@ -58,12 +59,16 @@ class MoviesController < ApplicationController
 
     @movie_name = params[:movie][:title]
     find_movie = Tmdb::Movie.find(@movie_name)
+
     if !find_movie.empty?
       
       movie = find_movie[0]
       @release_date = movie.release_date
-      @name = movie.title 
-      redirect_to new_movie_path( name:@name,date:@release_date )
+      @name = movie.title
+      @url = "https://image.tmdb.org/t/p/w500" + movie.poster_path
+      @description = movie.overview
+      redirect_to new_movie_path( name:@name,date:@release_date,url:@url,description:@description )
+
     else
       flash[:notice] = "Movie '#{@movie_name}' not found."
       redirect_to movies_path
@@ -94,7 +99,7 @@ class MoviesController < ApplicationController
   end
 
   def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date)
+    params.require(:movie).permit(:title, :rating, :description, :release_date, :url)
   end
 
 end

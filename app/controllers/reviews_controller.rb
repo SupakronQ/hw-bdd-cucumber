@@ -43,6 +43,14 @@ class ReviewsController < ApplicationController
         redirect_to movie_path(@movie)
     end
   
+    def destroy
+        @movie = Movie.find params[:movie_id]
+        @review = Review.find params[:id]
+        @review.destroy
+        flash[:notice] = "Review : '#{ @review.comments}' deleted."
+        redirect_to movie_path(@movie)
+    end
+
     private
     def review_params
         params.require(:review).permit(:potatoes, :comments, :moviegoer, :movie)

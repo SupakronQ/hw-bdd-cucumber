@@ -13,3 +13,48 @@
  *= require_tree .
  *= require_self
  */
+
+/* Avatar Navbar */
+ .navbar {
+  display: grid;
+  grid-template-columns: 1fr auto; /* 1 ส่วนที่ขยายตามขนาด, 1 ส่วนที่คงที่ (เนื้อหาของ current_moviegoer) */
+  align-items: center; /* จัดให้เนื้อหาอยู่ตรงกลางตามแนวตั้ง */
+}
+
+.title {
+  grid-column: 1; /* ระบุให้ title อยู่ในส่วนที่ 1 */
+}
+
+.user-info {
+  grid-column: 2; /* ระบุให้ user-info อยู่ในส่วนที่ 2 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* จัดให้เนื้อหาของ user-info ชิดขวา */
+}
+
+.user-info img {
+  margin-left: 10px; /* ระยะห่างระหว่างรูปภาพกับข้อความ Current User */
+}
+
+ /* Page Movie Show css  */
+ .movie-image {
+    float: left; /* ให้รูปภาพอยู่ด้านซ้าย */
+    margin-right: 20px; /* เพื่อให้ข้อความขวาของรูปห่างจากรูป */
+    width: 250px;
+    height: 375px;
+
+  }
+  
+  #details {
+    list-style-type: none; /* ไม่มี bullets ในรายการ */
+    padding: 0; /* ไม่มีระยะห่างในรายการ */
+  }
+  
+  #details li {
+    margin-bottom: 10px; /* ระยะห่างระหว่างรายการ */
+  }
+  
+  .details-container {
+    display: flex;
+
+  }
