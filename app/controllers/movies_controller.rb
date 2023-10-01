@@ -2,7 +2,7 @@ Tmdb::Api.key(ENV["APITMDB"])
 
 class MoviesController < ApplicationController
 
-  before_action :force_index_redirect, only: [:index]
+  before_action :authenticate_moviegoer!, except: [:show, :index, :force_index_redirect]
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -34,14 +34,14 @@ class MoviesController < ApplicationController
 
   def create
 
-    if !Movie.where(title: @title ).empty?
+    if Movie.where(title: params[:movie][:title] ).empty?
 
     @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
     
     else
-      flash[:notice] = "Movie '#{ @title }' already exist."
+      flash[:notice] = "Movie '#{ params[:movie][:title] }' already exist."
       redirect_to movies_path
     end
 
