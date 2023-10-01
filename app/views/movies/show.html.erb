@@ -60,22 +60,38 @@
 
 <br/>
 
-<h2>Reviews</h2>
 
-<% @reviews.each do |review| %>
-  <div class="review">
+<div class="row d-flex justify-content-center mt-100 mb-100">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h4 class="card-title">Latest Comments</h4>
+            </div>
+		<% @reviews.each do |review| %>
+            <div class="comment-widgets">
+                <!-- Comment Row -->
+                <div class="d-flex flex-row comment-row m-t-0 ">
+                    <div class="p-2"><%= image_tag(review.moviegoer.avatar_url, class:"rounded-circle" ) %></div>
+                    <div class="comment-text w-100">
 
-    <p>Rating: <%= review.potatoes %></p>
-    <p>Comment: <%= review.comments %></p>
-    <p>By: <%= review.moviegoer.email %></p>
-    <%= image_tag(review.moviegoer.avatar_url) %>
+                        <h6 class="font-medium"> <%= review.moviegoer.email %></h6><span class="m-b-15 d-block">Rating: <%= review.potatoes %> </span> <span class="m-b-15 d-block">Comment: <%= review.comments %> </span>
+                        <div class="comment-footer"> <span class="text-muted float-right"><%= review.created_at %></span> 
+                        
+                        </div>
+                    </div>
+                </div>
+                <% if !current_moviegoer.nil? %>
+                <% if current_moviegoer.email == review.moviegoer.email %>
 
-    <% if current_moviegoer.email == review.moviegoer.email %>
-    <%= link_to 'Delete', movie_review_path(@movie, review), 'data-method': 'delete', 'data-confirm': 'Are you sure?', class: 'btn btn-danger col-2' %>
-    <% end %>
-
-  </div>
-<% end %>
+                <%= link_to 'Delete', movie_review_path(@movie, review), 'data-method': 'delete', 'data-confirm': 'Are you sure?', class: 'btn btn-danger col-2' %>
+                <%= link_to 'Edit', edit_movie_review_path(@movie, review), class: 'btn btn-primary col-2' %>
+                <% end %>
+              <% end %>
+	  	<% end %>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 

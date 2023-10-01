@@ -1,6 +1,7 @@
 Tmdb::Api.key(ENV["APITMDB"])
 
 class MoviesController < ApplicationController
+
   before_action :force_index_redirect, only: [:index]
 
   def show
@@ -32,9 +33,18 @@ class MoviesController < ApplicationController
   end
 
   def create
+
+    if !Movie.where(title: @title ).empty?
+
     @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
+    
+    else
+      flash[:notice] = "Movie '#{ @title }' already exist."
+      redirect_to movies_path
+    end
+
   end
 
   def edit
@@ -58,22 +68,23 @@ class MoviesController < ApplicationController
   def search_tmdb
 
     @movie_name = params[:movie][:title]
-    find_movie = Tmdb::Movie.find(@movie_name)
 
-    if !find_movie.empty?
+      find_movie = Tmdb::Movie.find(@movie_name)
+
+      if !find_movie.empty?
+        
+        movie = find_movie[0]
+        @release_date = movie.release_date
+        @name = movie.title
+        @url = "https://image.tmdb.org/t/p/w500" + movie.poster_path
+        @description = movie.overview
+        redirect_to new_movie_path( name:@name,date:@release_date,url:@url,description:@description )
+
+      else
+        flash[:notice] = "Movie '#{@movie_name}' not found."
+        redirect_to movies_path
+      end
       
-      movie = find_movie[0]
-      @release_date = movie.release_date
-      @name = movie.title
-      @url = "https://image.tmdb.org/t/p/w500" + movie.poster_path
-      @description = movie.overview
-      redirect_to new_movie_path( name:@name,date:@release_date,url:@url,description:@description )
-
-    else
-      flash[:notice] = "Movie '#{@movie_name}' not found."
-      redirect_to movies_path
-    end
-
   end
 
   private
