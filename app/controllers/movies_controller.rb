@@ -1,26 +1,21 @@
 Tmdb::Api.key(ENV["APITMDB"])
-
+ # Do things...
 class MoviesController < ApplicationController
-
+   # Do things...
   before_action :authenticate_moviegoer!, except: [:show, :index, :force_index_redirect]
 
   def show
-    id = params[:id] # retrieve movie ID from URI route
-    @movie = Movie.find(id) # look up movie by unique ID
-    # will render app/views/movies/show.<extension> by default
 
-    @reviews = @movie.reviews
-    
+    @movie = Movie.find params[:id] # look up movie by unique ID
   end
 
   def index
     @all_ratings = Movie.all_ratings
     @movies = Movie.with_ratings(ratings_list, sort_by)
     @ratings_to_show_hash = ratings_hash
-    @sort_by = sort_by
     # remember the correct settings for next time
     session['ratings'] = ratings_list
-    session['sort_by'] = @sort_by
+    session['sort_by'] = sort_by
   end
 
   def new
@@ -33,17 +28,21 @@ class MoviesController < ApplicationController
   end
 
   def create
-
-    if Movie.where(title: params[:movie][:title] ).empty?
-
-    @movie = Movie.create!(movie_params)
-    flash[:notice] = "#{@movie.title} was successfully created."
-    redirect_to movies_path
     
+    params_title = params[:movie][:title]
+
+    if Movie.where(title: params_title ).empty?
+
+    movie = Movie.create!(movie_params)
+    flash[:notice] = "#{movie.title} was successfully created."
+
     else
-      flash[:notice] = "Movie '#{ params[:movie][:title] }' already exist."
-      redirect_to movies_path
+
+      flash[:notice] = "Movie '#{ params_title }' already exist."
+
     end
+
+    redirect_to movies_path
 
   end
 
@@ -52,36 +51,36 @@ class MoviesController < ApplicationController
   end
 
   def update
-    @movie = Movie.find params[:id]
-    @movie.update_attributes!(movie_params)
-    flash[:notice] = "#{@movie.title} was successfully updated."
-    redirect_to movie_path(@movie)
+    movie = Movie.find params[:id]
+    movie.update_attributes!(movie_params)
+    flash[:notice] = "#{movie.title} was successfully updated."
+    redirect_to movie_path
   end
 
   def destroy
-    @movie = Movie.find(params[:id])
-    @movie.destroy
-    flash[:notice] = "Movie '#{@movie.title}' deleted."
+    movie = Movie.find params[:id]
+    movie.destroy
+    flash[:notice] = "Movie '#{movie.title}' deleted."
     redirect_to movies_path
   end
 
   def search_tmdb
 
-    @movie_name = params[:movie][:title]
+    movie_name = params[:movie][:title]
 
-      find_movie = Tmdb::Movie.find(@movie_name)
+      find_movie = Tmdb::Movie.find(movie_name)
 
       if !find_movie.empty?
         
         movie = find_movie[0]
-        @release_date = movie.release_date
-        @name = movie.title
-        @url = "https://image.tmdb.org/t/p/w500" + movie.poster_path
-        @description = movie.overview
-        redirect_to new_movie_path( name:@name,date:@release_date,url:@url,description:@description )
+        release_date = movie.release_date
+        name = movie.title
+        url = "https://image.tmdb.org/t/p/w500" + movie.poster_path
+        description = movie.overview
+        redirect_to new_movie_path( name:name,date:release_date,url:url,description:description )
 
       else
-        flash[:notice] = "Movie '#{@movie_name}' not found."
+        flash[:notice] = "Movie '#{movie_name}' not found."
         redirect_to movies_path
       end
       

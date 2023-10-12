@@ -13,19 +13,8 @@ class ReviewsController < ApplicationController
     end
   
     public
-    def new
-        # exist_review = current_moviegoer.reviews.find_by(movie_id: params[:movie_id])
-        # if exist_review
-        #     redirect_to edit_movie_review_path(@movie, exist_review)
-        # end
-        # @review = @movie.reviews.build
-    end
-  
+
     def create
-        # since moviegoer_id is a protected attribute that won't get
-        # assigned by the mass-assignment from params[:review], we set it
-        # by using the << method on the association.  We could also
-        # set it manually with review.moviegoer = @current_user.
         current_moviegoer.reviews << @movie.reviews.build(review_params)
         redirect_to movie_path(@movie)
     end
