@@ -1,12 +1,13 @@
 Tmdb::Api.key(ENV["APITMDB"])
- # Do things...
+ # Controller of movie 
 class MoviesController < ApplicationController
-   # Do things...
+   # model and view
   before_action :authenticate_moviegoer!, except: [:show, :index, :force_index_redirect]
 
   def show
 
     @movie = Movie.find params[:id] # look up movie by unique ID
+
   end
 
   def index
@@ -20,10 +21,12 @@ class MoviesController < ApplicationController
 
   def new
 
-    @movie_title = params[:name]
-    @movie_date = params[:date] || Date.today.strftime()
-    @movie_url = params[:url]
-    @movie_description = params[:description]
+    movie_details = params[:movie_details]
+    if movie_details
+      @movie = movie_details
+    else
+      @movie = {name:'',date:Date.today.strftime(),url:'',description:''}
+    end
 
   end
 
@@ -77,7 +80,7 @@ class MoviesController < ApplicationController
         name = movie.title
         url = "https://image.tmdb.org/t/p/w500" + movie.poster_path
         description = movie.overview
-        redirect_to new_movie_path( name:name,date:release_date,url:url,description:description )
+        redirect_to new_movie_path( movie_details: {name:name,date:release_date,url:url,description:description} )
 
       else
         flash[:notice] = "Movie '#{movie_name}' not found."
