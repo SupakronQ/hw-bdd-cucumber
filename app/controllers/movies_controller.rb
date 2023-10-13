@@ -21,12 +21,7 @@ class MoviesController < ApplicationController
 
   def new
 
-    movie_details = params[:movie_details]
-    if movie_details
-      @movie = movie_details
-    else
-      @movie = {name:'',date:Date.today.strftime(),url:'',description:''}
-    end
+    @movie = params[:movie_details]
 
   end
 
@@ -112,7 +107,7 @@ class MoviesController < ApplicationController
   end
 
   def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date, :url)
+    params.require(:movie).permit(Movie.column_names.map(&:to_sym))
   end
 
 end
